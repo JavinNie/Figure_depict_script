@@ -1,8 +1,6 @@
 # 1. 线型图
 
-
-example_figures/my plot_20240601_175826.png
-
+https://github.com/JavinNie/Figure_depict_script/commit/bf10d310bfce74c859529faddc206b1cae8af543#diff-ed1b726d77ca860c38e89e41f91d7f57206ae1d85bf7ec40f7e366b5c9a8d9f0
 ```
 import numpy as np
 import os
@@ -78,7 +76,7 @@ if __name__=='__main__':
 
 # 2.双纵轴曲线绘制
 
-example_figures/my plot_20240601_232259 [2].png
+[example_figures/my plot_20240601_232259 [2].png](https://github.com/JavinNie/Figure_depict_script/commit/bf10d310bfce74c859529faddc206b1cae8af543#diff-49bedd1dbfc5fdd35b88943932791096828d9065da6a75a197cfd9f8ae51aa6f)
 
 ```
 import numpy as np
