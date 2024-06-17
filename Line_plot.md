@@ -1,6 +1,9 @@
 # 1. 线型图
 
-![Image text](https://github.com/JavinNie/Figure_depict_script/commit/bf10d310bfce74c859529faddc206b1cae8af543#diff-ed1b726d77ca860c38e89e41f91d7f57206ae1d85bf7ec40f7e366b5c9a8d9f0)
+![Image text](https://raw.githubusercontent.com/JavinNie/Figure_depict_script/bf10d310bfce74c859529faddc206b1cae8af543/example_figures/my%20plot_20240601_175826.png)
+
+
+
 ```
 import numpy as np
 import os
