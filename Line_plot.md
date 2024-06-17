@@ -1,4 +1,5 @@
 # 1. 线型图
+保持清晰画出端点值
 
 ![Image text](https://raw.githubusercontent.com/JavinNie/Figure_depict_script/bf10d310bfce74c859529faddc206b1cae8af543/example_figures/my%20plot_20240601_175826.png)
 
