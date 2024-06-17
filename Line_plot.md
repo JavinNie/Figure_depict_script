@@ -1,6 +1,7 @@
 # 1. 线型图
 
-![1af4277c05b5a83f26a8ae32810adb69.png](en-resource://database/19574:1)
+
+
 
 ```
 import numpy as np
