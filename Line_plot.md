@@ -10,6 +10,7 @@ import os
 import matplotlib.pyplot as plt
 from datetime import datetime
 import matplotlib as mpl
+from scipy.interpolate import interp1d
 def create_custom_plot(data, labels, colors, linestyles, markers, base_filename, xlabel, ylabel, title, legend=True):
     """
     创建并保存一个图表，文件名包含时间戳和基础文件名，使用空心标记，并保存为 PNG 格式。
@@ -30,12 +31,14 @@ def create_custom_plot(data, labels, colors, linestyles, markers, base_filename,
     mpl.rcParams['axes.titlesize'] = 16  # 标题字体大小
     mpl.rcParams['xtick.labelsize'] = 12  # x轴刻度标签的字体大小
     mpl.rcParams['ytick.labelsize'] = 12  # y轴刻度标签的字体大小
-    plt.figure(figsize=(5, 4))
+    # plt.figure(figsize=(5, 4))
+    fig, ax = plt.subplots(figsize=(5, 4))
     for (x, y), label, color, linestyle, marker in zip(data, labels, colors, linestyles, markers):
-        #实心
-        # plt.plot(x, y, label=label, color=color, linestyle=linestyle, marker=marker)
+        # 实心
+        # fig, ax = plt.subplots(x, y, label=label, color=color, linestyle=linestyle, marker=marker)
         # #空心
-        plt.plot(x, y, label=label, color=color, linestyle=linestyle, marker=marker, markerfacecolor='none',markeredgecolor=color)
+        # fig, ax = plt.subplots(x, y, label=label, color=color, linestyle=linestyle, marker=marker, markerfacecolor='none',markeredgecolor=color)
+        ax.plot(x, y, label=label, color=color, linestyle=linestyle,marker=marker, markerfacecolor='none',markeredgecolor=color)
     plt.title(title)
     plt.xlabel(xlabel)
     plt.ylabel(ylabel)
@@ -44,6 +47,16 @@ def create_custom_plot(data, labels, colors, linestyles, markers, base_filename,
         # 添加图例，位置设置在左上角
         plt.legend(loc='lower left')
     plt.grid(True)
+    # 创建tick插值函数
+    x_interp = interp1d(np.linspace(x[0], x[len(x) - 1], len(x)), x)
+    # 自适应计算tick数目
+    def get_num_ticks(labels):
+        if len(labels) > 8:
+            return 8
+        return len(labels)
+    x_positions = np.linspace(x[0], x[len(x) - 1], get_num_ticks(x))
+    ax.set_xticks(x_positions)
+    ax.set_xticklabels([f"{x_interp(pos):.1f}" for pos in x_positions])
     # 自动调整布局防止重叠
     plt.tight_layout()
     # 生成文件名，包含时间戳
@@ -54,7 +67,7 @@ def create_custom_plot(data, labels, colors, linestyles, markers, base_filename,
 '''***************** test scripts ********************'''
 # 示例数据测试
 def main():
-    x = np.linspace(0, 10, 100)
+    x = np.linspace(-0.3, 10.1, 100)
     data = [
         (x, np.sin(x)),
         (x, np.cos(x)),
@@ -86,6 +99,7 @@ import os
 import matplotlib.pyplot as plt
 from datetime import datetime
 import matplotlib as mpl
+from scipy.interpolate import interp1d
 def create_dual_axis_plot(data, labels, colors, linestyles, markers, base_filename, xlabel, ylabel_left, ylabel_right,
                           title):
     """
@@ -99,7 +113,8 @@ def create_dual_axis_plot(data, labels, colors, linestyles, markers, base_filena
     mpl.rcParams['ytick.labelsize'] = 12
     # A4 paper width in inches and 2/5 of it
     # fig_width = 8.27 * 2 / 5  # A4 paper width is 8.27 inches
-    plt.figure(figsize=(5, 4))
+    # plt.figure(figsize=(5, 4))
+    fig, ax = plt.subplots(figsize=(5, 4))
     ax1 = plt.gca()  # Get current axis
     ax2 = ax1.twinx()  # Create another axis that shares the same x-axis
     # Plotting data on the first y-axis
@@ -117,19 +132,31 @@ def create_dual_axis_plot(data, labels, colors, linestyles, markers, base_filena
     # Combining legends from both axes
     lines = [line1, line2]
     labels = [l.get_label() for l in lines]
-    plt.legend(lines, labels, loc='upper left')
+    plt.legend(lines, labels, loc='lower left')
     # ax1.legend(loc='upper left')
     # ax2.legend(loc='upper right')
     plt.grid(True)
+    #
+    # 创建tick插值函数
+    x=data[1][0]
+    x_interp = interp1d(np.linspace(x[0], x[len(x) - 1], len(x)), x)
+    # 自适应计算tick数目
+    def get_num_ticks(labels):
+        if len(labels) > 8:
+            return 8
+        return len(labels)
+    x_positions = np.linspace(x[0], x[len(x) - 1], get_num_ticks(x))
+    ax.set_xticks(x_positions)
+    ax.set_xticklabels([f"{x_interp(pos):.1f}" for pos in x_positions])
+    #调整布局
     plt.tight_layout()
     # File saving logic
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     filename = f"{base_filename}_{timestamp}.png"
     plt.savefig(filename, format='png', dpi=300)
     plt.show()
-'''''''
 def main():
-    x = np.linspace(0, 10, 100)
+    x = np.linspace(-0.3, 10.2, 100)
     data = [
         (x, np.sin(x)),  # Data for the left y-axis
         (x, np.cos(x))  # Data for the right y-axis
@@ -150,5 +177,6 @@ def main():
                           xlabel=xlabel, ylabel_left=ylabel_left, ylabel_right=ylabel_right, title=fig_name)
 if __name__ == '__main__':
     main()
+
 
 ```
