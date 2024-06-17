@@ -1,7 +1,7 @@
 # 1. 线型图
 
 
-
+example_figures/my plot_20240601_175826.png
 
 ```
 import numpy as np
@@ -78,7 +78,7 @@ if __name__=='__main__':
 
 # 2.双纵轴曲线绘制
 
-![7e0fa86447170647a82d709463faeb86.png](en-resource://database/19592:1)
+example_figures/my plot_20240601_232259 [2].png
 
 ```
 import numpy as np
