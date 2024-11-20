@@ -6,17 +6,19 @@
 
 
 ```
+#2024-11-20 更新了数据输入方式
 import numpy as np
 import os
 import matplotlib.pyplot as plt
 from datetime import datetime
 import matplotlib as mpl
-from scipy.interpolate import interp1d
-def create_custom_plot(data, labels, colors, linestyles, markers, base_filename, xlabel, ylabel, title, legend=True):
+
+def create_custom_plot(data_matrix, labels, colors, linestyles, markers, base_filename, xlabel, ylabel, title, legend=True):
     """
-    创建并保存一个图表，文件名包含时间戳和基础文件名，使用空心标记，并保存为 PNG 格式。
+    使用 NumPy 数据矩阵创建并保存一个图表。
+    
     参数:
-    - data: 包含(x, y)元组的列表。
+    - data_matrix: NumPy 矩阵，每列是一个数据集（第一列是 x）。
     - labels: 每条线的标签列表。
     - colors: 每条线的颜色列表。
     - linestyles: 每条线的线型列表。
@@ -26,67 +28,51 @@ def create_custom_plot(data, labels, colors, linestyles, markers, base_filename,
     - title: 图表的标题。
     - legend: 是否显示图例。
     """
-    mpl.rcParams['font.family'] = 'Arial'  # 设置全局字体为Arial
-    mpl.rcParams['font.size'] = 12  # 基础字体大小
-    mpl.rcParams['axes.labelsize'] = 14  # 轴标签字体大小
-    mpl.rcParams['axes.titlesize'] = 16  # 标题字体大小
-    mpl.rcParams['xtick.labelsize'] = 12  # x轴刻度标签的字体大小
-    mpl.rcParams['ytick.labelsize'] = 12  # y轴刻度标签的字体大小
-    # plt.figure(figsize=(5, 4))
-    fig, ax = plt.subplots(figsize=(5, 4))
-    for (x, y), label, color, linestyle, marker in zip(data, labels, colors, linestyles, markers):
-        # 实心
-        # fig, ax = plt.subplots(x, y, label=label, color=color, linestyle=linestyle, marker=marker)
-        # #空心
-        # fig, ax = plt.subplots(x, y, label=label, color=color, linestyle=linestyle, marker=marker, markerfacecolor='none',markeredgecolor=color)
-        ax.plot(x, y, label=label, color=color, linestyle=linestyle,marker=marker, markerfacecolor='none',markeredgecolor=color)
+    mpl.rcParams['font.family'] = 'Arial'
+    mpl.rcParams['font.size'] = 10
+    plt.figure(figsize=(3.15, 3.15))
+
+    x = data_matrix[:, 0]  # x 数据
+    for i, (label, color, linestyle, marker) in enumerate(zip(labels, colors, linestyles, markers)):
+        y = data_matrix[:, i + 1]  # 每列对应一个 y 数据
+        plt.plot(x, y, label=label, color=color, linestyle=linestyle, marker=marker,
+                 markerfacecolor='none', markeredgecolor=color)
+    
     plt.title(title)
     plt.xlabel(xlabel)
     plt.ylabel(ylabel)
     if legend:
-        plt.legend()
-        # 添加图例，位置设置在左上角
         plt.legend(loc='lower left')
     plt.grid(True)
-    # 创建tick插值函数
-    x_interp = interp1d(np.linspace(x[0], x[len(x) - 1], len(x)), x)
-    # 自适应计算tick数目
-    def get_num_ticks(labels):
-        if len(labels) > 8:
-            return 8
-        return len(labels)
-    x_positions = np.linspace(x[0], x[len(x) - 1], get_num_ticks(x))
-    ax.set_xticks(x_positions)
-    ax.set_xticklabels([f"{x_interp(pos):.1f}" for pos in x_positions])
-    # 自动调整布局防止重叠
     plt.tight_layout()
-    # 生成文件名，包含时间戳
+
+    # 保存图表
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     filename = f"{base_filename}_{timestamp}.png"
     plt.savefig(filename, format='png', dpi=300)
     plt.show()
+
 '''***************** test scripts ********************'''
 # 示例数据测试
 def main():
+    # 示例数据矩阵
     x = np.linspace(-0.3, 10.1, 100)
-    data = [
-        (x, np.sin(x)),
-        (x, np.cos(x)),
-        (x, np.sin(x + np.pi / 4))
-    ]
+    data_matrix = np.column_stack([x, np.sin(x), np.cos(x), np.sin(x + np.pi / 4)])
+    
     labels = ['sin(x)', 'cos(x)', 'sin(x + π/4)']
     colors = ['blue', 'green', 'red']
     linestyles = ['-', '--', '-.']
-    markers = ['o', '^', 's']  # 'o' 是圆形，'^' 是向上的三角形，'s' 是方形
-    xlabel='x index'
-    ylabel='y value'
-    fig_name='my plot'
-    directory_path=''
+    markers = ['o', '^', 's']
+    xlabel = 'x index'
+    ylabel = 'y value'
+    fig_name = 'my_plot'
+    directory_path = ''
     file_name = os.path.join(directory_path, fig_name)
-    create_custom_plot(data, labels, colors, linestyles, markers, base_filename=file_name,
-                       xlabel=xlabel, ylabel=ylabel, title=fig_name,
-                       legend=True)
-if __name__=='__main__':
+    
+    create_custom_plot(data_matrix, labels, colors, linestyles, markers, base_filename=file_name,
+                       xlabel=xlabel, ylabel=ylabel, title=fig_name, legend=True)
+
+if __name__ == '__main__':
     main()
 
 ```
